@@ -13,6 +13,7 @@
     --bg-card: #10121a;
     --accent-blue: #00e5ff;
     --accent-gold: #ffcc00;
+    --accent-green: #00ff88;
     --text-white: #ffffff;
   }
 
@@ -39,7 +40,7 @@
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; z-index: 9999;
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    animation: fadeOut 1.2s forwards 2s; /* 2 soniya ko'rinadi */
+    animation: fadeOut 1.2s forwards 2s; 
   }
   @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
 
@@ -63,7 +64,7 @@
   /* Tap Container - Optimallashtirilgan */
   .game-container { 
     flex: 1; display: flex; justify-content: center; align-items: center; position: relative; 
-    touch-action: none; /* Qotishni oldini oluvchi eng muhim kod */
+    touch-action: none; 
   }
   .main-coin {
     width: 65vw; height: 65vw; max-width: 280px; max-height: 280px;
@@ -267,10 +268,11 @@ let lastRefillDate = localStorage.getItem("ozs_f_refillDate") || "";
 let lastSpinDate = localStorage.getItem("ozs_f_spinDate") || "";
 let spinTotalCount = Number(localStorage.getItem("ozs_f_spinTotal")) || 0;
 let completedTasks = JSON.parse(localStorage.getItem("ozs_f_tasks")) || [];
-
-// YANGA QO'SHILGANLAR
 let lastBonusDate = localStorage.getItem("ozs_f_bonusDate") || "";
 let bonusStreak = Number(localStorage.getItem("ozs_f_streak")) || 0;
+
+// OFFLINE ENERGY UCHUN VAQT
+let lastSaveTime = Number(localStorage.getItem("ozs_f_lastTime")) || Date.now();
 
 // --- CONFIGURATIONS ---
 const tapPowers = [1, 2, 5, 12, 24, 50, 100];
@@ -312,9 +314,26 @@ function save() {
     localStorage.setItem("ozs_f_spinDate", lastSpinDate);
     localStorage.setItem("ozs_f_spinTotal", spinTotalCount);
     localStorage.setItem("ozs_f_tasks", JSON.stringify(completedTasks));
-    // Bonus
     localStorage.setItem("ozs_f_bonusDate", lastBonusDate);
     localStorage.setItem("ozs_f_streak", bonusStreak);
+    localStorage.setItem("ozs_f_lastTime", Date.now()); // Oxirgi faoliyat vaqtini saqlash
+}
+
+// OFFLINE ENERGY HISOBLASH
+function calculateOfflineEnergy() {
+    const now = Date.now();
+    const diffSeconds = Math.floor((now - lastSaveTime) / 1000);
+
+    if (diffSeconds > 0) {
+        const maxE = limits[limitLvl];
+        const regenAmount = diffSeconds * 2; // Har sekundda 2 energiya tiklanadi
+        if (energy < maxE) {
+            energy += regenAmount;
+            if (energy > maxE) energy = maxE;
+        }
+    }
+    lastSaveTime = now;
+    save();
 }
 
 function updateUI() {
@@ -426,7 +445,6 @@ function renderLeagues(currentName) {
 // --- INTERACTIONS (OPTIMIZED TAP) ---
 const tapSurface = document.getElementById("tapSurface");
 
-// QOTMASLIK UCHUN ENG ASOSIY FUNKSIYA: POINTERDOWN
 tapSurface.addEventListener("pointerdown", (e) => {
     e.preventDefault(); 
     
@@ -440,7 +458,7 @@ tapSurface.addEventListener("pointerdown", (e) => {
     coins += power;
     totalCoins += power; 
 
-    // Tezkor Animatsiya (Floating number)
+    // Tezkor Animatsiya
     const n = document.createElement("div");
     n.className = "tap-num";
     n.innerText = "+" + power;
@@ -482,7 +500,6 @@ function useRefill() {
     }
 }
 
-// --- DAILY BONUS LOGIC ---
 function claimDailyBonus() {
     const today = new Date().toLocaleDateString();
     if(lastBonusDate === today) return;
@@ -549,8 +566,14 @@ setInterval(save, 5000);
 function openM(id) { closeAll(); document.getElementById(id).classList.add("open"); document.getElementById("overlay").style.display="block"; }
 function closeAll() { document.querySelectorAll(".modal").forEach(m => m.classList.remove("open")); document.getElementById("overlay").style.display="none"; }
 
-// START
-window.onload = updateUI;
+// START (Oflayn energiya hisoblanib keyin UI yangilanadi)
+window.onload = () => {
+    calculateOfflineEnergy();
+    updateUI();
+};
+
+window.addEventListener('blur', save);
+window.addEventListener('beforeunload', save);
 </script>
 </body>
 </html>
