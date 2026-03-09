@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>OZS TAP - FINAL PLATINUM EDITION</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+  :root {
+    --bg-dark: #050608;
+    --bg-card: #10121a;
+    --accent-blue: #00e5ff;
+    --accent-gold: #ffcc00;
+    --text-white: #ffffff;
+  }
+
+  * { 
+    box-sizing: border-box; 
+    margin: 0; padding: 0; 
+    user-select: none; 
+    -webkit-user-select: none; 
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-white);
+    height: 100dvh; width: 100vw;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    background-image: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 60%);
+  }
+
+  /* Intro Animation */
+  #intro {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 9999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    animation: fadeOut 1.2s forwards 2s; /* 2 soniya ko'rinadi */
+  }
+  @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+
+  /* Header & League */
+  .header { padding: 15px 20px 5px; display: flex; justify-content: space-between; align-items: center; }
+  .league-badge { 
+    padding: 6px 14px; border-radius: 20px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
+    text-transform: uppercase; border: 1px solid var(--accent-blue); color: var(--accent-blue);
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s;
+  }
+  .player-name { font-family: 'Orbitron'; font-size: 11px; color: #666; font-weight: 700; letter-spacing: 1px;}
+
+  /* Score Area */
+  .score-section { text-align: center; margin-top: 3vh; flex-shrink: 0; }
+  .score-section h1 { 
+    font-size: 52px; font-weight: 900; color: var(--accent-gold); font-family: 'Orbitron'; 
+    text-shadow: 0 0 25px rgba(255,204,0,0.3); margin-top: 5px;
+  }
+  .total-score-info { font-size: 11px; color: #888; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* Tap Container - Optimallashtirilgan */
+  .game-container { 
+    flex: 1; display: flex; justify-content: center; align-items: center; position: relative; 
+    touch-action: none; /* Qotishni oldini oluvchi eng muhim kod */
+  }
+  .main-coin {
+    width: 65vw; height: 65vw; max-width: 280px; max-height: 280px;
+    background: radial-gradient(circle, #ffe600 0%, #ff9900 70%, #cc6600 100%);
+    border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 50px rgba(255,153,0,0.3), inset 0 0 20px rgba(255,255,255,0.6);
+    border: 6px solid #b35900; font-size: 90px;
+    transition: transform 0.05s ease-out;
+    will-change: transform;
+    pointer-events: auto;
+  }
+  .main-coin:active { transform: scale(0.92); }
+
+  /* Floating Animation */
+  .tap-num { 
+    position: absolute; color: white; font-size: 38px; font-weight: 900; pointer-events: none; 
+    animation: floatUp 0.6s ease-out forwards; font-family: 'Orbitron'; z-index: 100; text-shadow: 0 3px 10px rgba(0,0,0,0.5);
+  }
+  @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-150px); opacity: 0; } }
+
+  /* Energy */
+  .status-panel { padding: 10px 25px 20px; flex-shrink: 0; }
+  .energy-info { display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 12px; margin-bottom: 8px; color:#ccc; }
+  .bar-bg { width: 100%; height: 16px; background: #161a22; border-radius: 12px; border: 1px solid #2a2d3e; overflow: hidden; }
+  .bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #00e5ff, #0077ff); transition: width 0.1s linear; }
+
+  /* Navbar - Gorizontal suriladigan (Scroll) qilib sozlangan */
+  .navbar {
+    display: flex; justify-content: flex-start; background: var(--bg-card); 
+    padding: 12px 10px calc(15px + env(safe-area-inset-bottom, 0px));
+    border-radius: 25px 25px 0 0; border-top: 1px solid rgba(255,255,255,0.05); 
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
+    overflow-x: auto; scrollbar-width: none; gap: 8px;
+  }
+  .navbar::-webkit-scrollbar { display: none; }
+  .nav-btn { flex: 0 0 auto; background: transparent; border: none; color: #666; font-size: 10px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; min-width: 70px; padding: 5px; border-radius: 15px;}
+  .nav-btn span { display: block; font-size: 22px; margin-bottom: 5px; }
+  .nav-btn.active, .nav-btn:active { color: var(--accent-blue); background: rgba(0,229,255,0.05); }
+
+  /* Modals */
+  .modal {
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 80dvh;
+    background: var(--bg-card); border-radius: 35px 35px 0 0;
+    z-index: 2000; transition: bottom 0.3s cubic-bezier(0.1, 0.7, 0.1, 1); padding: 30px 20px; overflow-y: auto;
+    border-top: 2px solid var(--accent-blue); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+  }
+  .modal.open { bottom: 0; }
+  .modal-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-family: 'Orbitron'; }
+  
+  .item-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+    padding: 18px 15px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .btn-buy { background: var(--accent-blue); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-family: 'Montserrat'; cursor: pointer; transition: 0.2s; }
+  .btn-buy:active { transform: scale(0.95); }
+  .btn-buy:disabled { background: #222; color: #555; transform: none; cursor: default;}
+
+  #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; backdrop-filter: blur(4px); }
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div style="font-family:'Orbitron'; font-size:55px; color:var(--accent-blue); text-shadow: 0 0 30px var(--accent-blue); text-align:center;">OZS STUDIO</div>
+  <p style="letter-spacing:6px; font-size:12px; color:#555; margin-top: 10px; font-weight:900;">PLATINUM EDITION</p>
+</div>
+
+<div class="header">
+  <div class="player-name">👤 <span id="userDisplay">Player</span></div>
+  <div class="league-badge" id="leagueBadge">Bronze</div>
+</div>
+
+<div class="score-section">
+  <div class="total-score-info" id="leagueName">BRONZE LEAGUE</div>
+  <h1 id="balance">0</h1>
+</div>
+
+<div class="game-container" id="tapSurface">
+  <div class="main-coin" id="coinBtn">🪙</div>
+</div>
+
+<div class="status-panel">
+  <div class="energy-info">
+    <span>⚡ ENERGY</span>
+    <span id="energyVal">1000 / 1000</span>
+  </div>
+  <div class="bar-bg"><div class="bar-fill" id="energyFill"></div></div>
+</div>
+
+<div class="navbar">
+  <button class="nav-btn" onclick="openM('boostM')"><span>🚀</span>Boost</button>
+  <button class="nav-btn" onclick="openM('taskM')"><span>📋</span>Tasks</button>
+  <button class="nav-btn" onclick="openM('spinM')"><span>🎡</span>Spin</button>
+  <button class="nav-btn" onclick="openM('bonusM')"><span>🎁</span>Bonus</button>
+  <button class="nav-btn" onclick="openM('statsM')"><span>🏆</span>League</button>
+  <button class="nav-btn" onclick="openM('walletM')"><span>💰</span>Wallet</button>
+  <button class="nav-btn" onclick="openM('supportM')"><span>🎧</span>Support</button>
+</div>
+
+<div id="overlay" onclick="closeAll()"></div>
+
+<div id="boostM" class="modal">
+  <div class="modal-h"><h2>Boosters</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <div id="boostList"></div>
+  <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 25px 0 20px;">
+  <h4 style="margin-bottom: 15px; opacity:0.8;">Bepul Energiya</h4>
+  <div class="item-card" style="border-color:var(--accent-gold);">
+    <div><p style="font-weight:900; font-size:15px;">Full Tank ⚡</p><p id="refillLabel" style="font-size:12px; color:var(--accent-gold); margin-top:5px;">Qoldi: 3/3</p></div>
+    <button id="refillBtn" class="btn-buy" style="background:var(--accent-gold);" onclick="useRefill()">TO'LDIRISH</button>
+  </div>
+</div>
+
+<div id="taskM" class="modal">
+  <div class="modal-h"><h2>Topshiriqlar</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <p style="font-size: 13px; color: #aaa; margin-bottom: 20px;">O'yin ichidagi yutuqlarga erishing va ulkan bonuslarni qo'lga kiriting!</p>
+  <div id="taskList"></div>
+</div>
+
+<div id="spinM" class="modal">
+  <div class="modal-h"><h2>Omadli Spin</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <div style="text-align:center; padding: 20px 0;">
+    <div style="position:relative; width: 260px; margin: 0 auto;">
+      <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ff0055; z-index: 10;"></div>
+      <svg id="wheel" viewBox="0 0 100 100" style="width: 100%; transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);">
+        <circle cx="50" cy="50" r="48" fill="#131622" stroke="#ffcc00" stroke-width="2"/>
+        <path d="M50 50 L50 2 A48 48 0 0 1 92 26 Z" fill="#ffcc00"/><text x="65" y="25" fill="black" font-size="5" font-weight="bold" transform="rotate(30, 65, 25)">50k</text>
+        <path d="M50 50 L92 26 A48 48 0 0 1 92 74 Z" fill="#00e5ff"/><text x="80" y="52" fill="black" font-size="5" font-weight="bold">5k</text>
+        <path d="M50 50 L92 74 A48 48 0 0 1 50 98 Z" fill="#ffcc00"/><text x="65" y="80" fill="black" font-size="5" font-weight="bold">15k</text>
+        <path d="M50 50 L50 98 A48 48 0 0 1 8 74 Z" fill="#00e5ff"/><text x="25" y="80" fill="black" font-size="5" font-weight="bold">0</text>
+        <path d="M50 50 L8 74 A48 48 0 0 1 8 26 Z" fill="#ffcc00"/><text x="10" y="52" fill="black" font-size="5" font-weight="bold">100k</text>
+        <path d="M50 50 L8 26 A48 48 0 0 1 50 2 Z" fill="#00e5ff"/><text x="25" y="25" fill="black" font-size="5" font-weight="bold">2k</text>
+        <circle cx="50" cy="50" r="5" fill="white"/>
+      </svg>
+    </div>
+    <button id="spinBtn" class="btn-buy" style="width:100%; height:60px; margin-top:30px; font-size:16px;" onclick="doSpin()">AYLANTIRISH (1 KUNDA 1 MARTA)</button>
+  </div>
+</div>
+
+<div id="bonusM" class="modal">
+  <div class="modal-h"><h2>Kunlik Bonus</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <div style="text-align:center; padding: 20px 0;">
+    <span style="font-size:80px; filter: drop-shadow(0 0 20px var(--accent-gold)); display:block; margin-bottom: 20px;">🎁</span>
+    <h2 id="streakTxt" style="color: var(--accent-gold); font-family: 'Orbitron'; font-size: 28px;">Kun: 0</h2>
+    <p style="opacity: 0.7; font-size: 14px; margin-top: 10px;">Har kuni ilovaga kiring va bepul <b style="color:var(--accent-gold);">10,000 tanga</b> oling!</p>
+    <button id="claimBonusBtn" class="btn-buy" style="width:100%; height:60px; margin-top:30px; font-size: 16px;" onclick="claimDailyBonus()">BONUSNI OLISH (+10,000)</button>
+  </div>
+</div>
+
+<div id="statsM" class="modal">
+  <div class="modal-h"><h2>Ligalar</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Ligalar jami ishlangan (sarflanmagan) tangalaringiz emas, tarixda ishlagan barcha tangalaringiz hisobidan o'sadi.</p>
+  <div id="leagueList"></div>
+</div>
+
+<div id="walletM" class="modal">
+  <div class="modal-h"><h2>Hamyon</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <div style="background:linear-gradient(135deg, #1e2548, #0a0c1a); padding:40px 20px; border-radius:30px; text-align:center; border: 1px solid rgba(0,229,255,0.3);">
+      <p style="font-size:12px; opacity:0.7; letter-spacing: 2px; font-weight: 700;">ASSETS VALUE</p>
+      <h1 id="usdValWallet" style="color:var(--accent-blue); font-family:'Orbitron'; font-size: 45px; margin:15px 0;">$0.0000</h1>
+  </div>
+  <button class="btn-buy" style="width:100%; height:60px; margin-top:30px; background:#fff; color:#000; font-size: 16px;" onclick="tg.showAlert('Pul yechish tizimi tez kunlarda mavjud bo\'ladi! ⏳')">💳 PUL YECHISH</button>
+</div>
+
+<div id="supportM" class="modal">
+  <div class="modal-h"><h2>Support</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
+  <div style="text-align:center; padding: 20px 0;">
+    <div style="font-size: 60px; margin-bottom: 10px;">👤</div>
+    <h2 style="font-family:'Orbitron'; margin-bottom: 5px;">0zodbek Saidov</h2>
+    <p style="opacity:0.5; font-size:12px; margin-bottom:25px;">OZS Studio Founder & Developer</p>
+    
+    <a href="https://instagram.com/0zodbek.saidov" target="_blank" class="item-card" style="text-decoration:none; color:white; background: linear-gradient(45deg, #f09433, #dc2743); border:none;">
+      <div style="display:flex; align-items:center; gap:15px;">
+          <span style="font-size:30px;">📸</span>
+          <div style="text-align: left;">
+              <p style="font-weight:900; margin:0; font-size:16px;">Instagram</p>
+              <p style="font-size:12px; color:white; opacity:0.9; margin-top:3px;">@0zodbek.saidov</p>
+          </div>
+      </div>
+      <span style="font-size:24px;">→</span>
+    </a>
+    
+    <p style="font-size:12px; color:#777; margin-top:20px; line-height: 1.5;">O'yin bo'yicha takliflar yoki savollaringiz bo'lsa, Instagram orqali bog'lanishingiz mumkin.</p>
+  </div>
+</div>
+
+<script>
+// --- TELEGRAM INIT ---
+const tg = window.Telegram.WebApp;
+tg.expand();
+tg.enableClosingConfirmation();
+document.getElementById("userDisplay").innerText = tg.initDataUnsafe?.user?.first_name || "Gamer";
+
+// --- STATE MANAGEMENT ---
+let coins = Number(localStorage.getItem("ozs_f_coins")) || 0;
+let totalCoins = Number(localStorage.getItem("ozs_f_totalCoins")) || coins; 
+let energy = Number(localStorage.getItem("ozs_f_energy")) || 1000;
+let tapLvl = Number(localStorage.getItem("ozs_f_tapLvl")) || 0;
+let limitLvl = Number(localStorage.getItem("ozs_f_limitLvl")) || 0;
+let refillCount = Number(localStorage.getItem("ozs_f_refills")) || 3;
+let lastRefillDate = localStorage.getItem("ozs_f_refillDate") || "";
+let lastSpinDate = localStorage.getItem("ozs_f_spinDate") || "";
+let spinTotalCount = Number(localStorage.getItem("ozs_f_spinTotal")) || 0;
+let completedTasks = JSON.parse(localStorage.getItem("ozs_f_tasks")) || [];
+
+// YANGA QO'SHILGANLAR
+let lastBonusDate = localStorage.getItem("ozs_f_bonusDate") || "";
+let bonusStreak = Number(localStorage.getItem("ozs_f_streak")) || 0;
+
+// --- CONFIGURATIONS ---
+const tapPowers = [1, 2, 5, 12, 24, 50, 100];
+const limits = [1000, 2000, 5000, 10000, 25000, 50000, 100000];
+const costs = [0, 1000, 5000, 20000, 100000, 500000, 2000000];
+
+// 10 ta LIGA TIZIMI
+const leagues = [
+    { name: "Bronze", min: 0, color: "#cd7f32" },
+    { name: "Silver", min: 50000, color: "#c0c0c0" },
+    { name: "Gold", min: 250000, color: "#ffd700" },
+    { name: "Platinum", min: 1000000, color: "#e5e4e2" },
+    { name: "Diamond", min: 5000000, color: "#b9f2ff" },
+    { name: "Elite", min: 10000000, color: "#9d00ff" },
+    { name: "Master", min: 25000000, color: "#ff4d00" },
+    { name: "Grandmaster", min: 50000000, color: "#00ff88" },
+    { name: "Legendary", min: 100000000, color: "#ff0055" },
+    { name: "Red Diamond", min: 1000000000, color: "#ff0000" }
+];
+
+// TOPSHIRIQLAR (TASKS)
+const tasks = [
+    { id: 't_spin1', title: '1 marta baraban aylantiring', type: 'spin', goal: 1, reward: 10000 },
+    { id: 't_spin3', title: 'Ketma-ket 3 kun baraban aylantiring', type: 'spin', goal: 3, reward: 10000 },
+    { id: 't_coin10k', title: '10,000 tanga yig\'ing', type: 'coin', goal: 10000, reward: 10000 },
+    { id: 't_coin100k', title: '100,000 tanga yig\'ing', type: 'coin', goal: 100000, reward: 500000 },
+    { id: 't_coin1m', title: '1,000,000 tanga yig\'ing', type: 'coin', goal: 1000000, reward: 500000 }
+];
+
+// --- CORE FUNCTIONS ---
+function save() {
+    localStorage.setItem("ozs_f_coins", coins);
+    localStorage.setItem("ozs_f_totalCoins", totalCoins);
+    localStorage.setItem("ozs_f_energy", energy);
+    localStorage.setItem("ozs_f_tapLvl", tapLvl);
+    localStorage.setItem("ozs_f_limitLvl", limitLvl);
+    localStorage.setItem("ozs_f_refills", refillCount);
+    localStorage.setItem("ozs_f_refillDate", lastRefillDate);
+    localStorage.setItem("ozs_f_spinDate", lastSpinDate);
+    localStorage.setItem("ozs_f_spinTotal", spinTotalCount);
+    localStorage.setItem("ozs_f_tasks", JSON.stringify(completedTasks));
+    // Bonus
+    localStorage.setItem("ozs_f_bonusDate", lastBonusDate);
+    localStorage.setItem("ozs_f_streak", bonusStreak);
+}
+
+function updateUI() {
+    // Top panels
+    document.getElementById("balance").innerText = Math.floor(coins).toLocaleString();
+    document.getElementById("energyVal").innerText = Math.floor(energy) + " / " + limits[limitLvl];
+    document.getElementById("energyFill").style.width = (energy / limits[limitLvl] * 100) + "%";
+    
+    // Wallet
+    let usd = (coins / 1000000) * 0.25;
+    document.getElementById("usdValWallet").innerText = "$" + usd.toFixed(4);
+
+    // League Calculation
+    let currentLeague = leagues[0];
+    for(let i=0; i<leagues.length; i++) {
+        if(totalCoins >= leagues[i].min) currentLeague = leagues[i];
+    }
+    
+    const badge = document.getElementById("leagueBadge");
+    badge.innerText = currentLeague.name;
+    badge.style.color = currentLeague.color;
+    badge.style.borderColor = currentLeague.color;
+    badge.style.boxShadow = `0 0 10px ${currentLeague.color}40`; 
+    document.getElementById("leagueName").innerText = currentLeague.name + " LEAGUE";
+    document.getElementById("leagueName").style.color = currentLeague.color;
+
+    // Daily Checks
+    const today = new Date().toLocaleDateString();
+    
+    // Spin Check
+    const spinBtn = document.getElementById("spinBtn");
+    if(lastSpinDate === today) {
+        spinBtn.disabled = true; spinBtn.innerText = "ERTAGA QAYTING"; spinBtn.style.background = "#333";
+    } else {
+        spinBtn.disabled = false; spinBtn.innerText = "AYLANTIRISH (1 KUNDA 1 MARTA)"; spinBtn.style.background = "var(--accent-blue)";
+    }
+
+    // Daily Bonus Check
+    document.getElementById("streakTxt").innerText = "Kun: " + bonusStreak;
+    const claimBtn = document.getElementById("claimBonusBtn");
+    if(lastBonusDate === today) {
+        claimBtn.disabled = true; claimBtn.innerText = "ERTANGA QAYTING"; claimBtn.style.background = "#333"; claimBtn.style.color = "#555";
+    } else {
+        claimBtn.disabled = false; claimBtn.innerText = "BONUSNI OLISH (+10,000)"; claimBtn.style.background = "var(--accent-green)"; claimBtn.style.color = "#000";
+    }
+
+    // Refill Check
+    if(lastRefillDate !== today) { refillCount = 3; lastRefillDate = today; }
+    document.getElementById("refillLabel").innerText = "Qoldi: " + refillCount + "/3";
+    if(refillCount <= 0) {
+        document.getElementById("refillBtn").disabled = true; document.getElementById("refillBtn").innerText = "TUGADI"; document.getElementById("refillBtn").style.background = "#333";
+    } else {
+        document.getElementById("refillBtn").disabled = false; document.getElementById("refillBtn").innerText = "TO'LDIRISH"; document.getElementById("refillBtn").style.background = "var(--accent-gold)";
+    }
+
+    renderBoosts();
+    renderTasks();
+    renderLeagues(currentLeague.name);
+}
+
+// --- RENDERING MODALS ---
+function renderBoosts() {
+    let h = "";
+    let nextTap = tapLvl + 1;
+    let isTapMax = nextTap >= tapPowers.length;
+    h += `<div class="item-card">
+        <div><p style="font-weight:900; font-size:15px;">Multi-Tap Lvl ${tapLvl+1}</p><p style="font-size:12px; color:var(--accent-gold); margin-top:5px;">Power: +${isTapMax ? 'MAX' : tapPowers[nextTap]}</p></div>
+        <button class="btn-buy" onclick="buy('tap')" ${isTapMax || coins < costs[nextTap] ? 'disabled' : ''}>${isTapMax ? 'MAX' : costs[nextTap].toLocaleString()}</button>
+    </div>`;
+    
+    let nextLim = limitLvl + 1;
+    let isLimMax = nextLim >= limits.length;
+    h += `<div class="item-card">
+        <div><p style="font-weight:900; font-size:15px;">Energy Limit Lvl ${limitLvl+1}</p><p style="font-size:12px; color:var(--accent-blue); margin-top:5px;">Limit: ${isLimMax ? 'MAX' : limits[nextLim].toLocaleString()}</p></div>
+        <button class="btn-buy" onclick="buy('lim')" ${isLimMax || coins < costs[nextLim] ? 'disabled' : ''}>${isLimMax ? 'MAX' : costs[nextLim].toLocaleString()}</button>
+    </div>`;
+    document.getElementById("boostList").innerHTML = h;
+}
+
+function renderTasks() {
+    let h = "";
+    tasks.forEach(t => {
+        const isDone = completedTasks.includes(t.id);
+        let progress = t.type === 'spin' ? spinTotalCount : totalCoins;
+        const canClaim = !isDone && progress >= t.goal;
+        
+        h += `<div class="item-card">
+            <div><p style="font-weight:900; font-size:14px;">${t.title}</p><p style="font-size:12px; color:var(--accent-gold); margin-top:5px;">Mukofot: +${t.reward.toLocaleString()}</p></div>
+            <button class="btn-buy" onclick="claimTask('${t.id}')" ${!canClaim ? 'disabled' : ''} style="${isDone ? 'background:var(--accent-green); color:#000;' : ''}">
+                ${isDone ? 'BAJARILDI' : (canClaim ? 'OLISH' : 'KUTISH')}
+            </button>
+        </div>`;
+    });
+    document.getElementById("taskList").innerHTML = h;
+}
+
+function renderLeagues(currentName) {
+    let h = "";
+    leagues.forEach(l => {
+        const isCurrent = l.name === currentName;
+        h += `<div class="item-card" style="border-left: 4px solid ${l.color}; ${isCurrent ? 'background:rgba(255,255,255,0.08);' : ''}">
+            <div><p style="font-weight:900; font-size:15px; color:${l.color}">${l.name}</p><p style="font-size:12px; color:#888; margin-top:5px;">Min: ${l.min.toLocaleString()} tanga</p></div>
+            ${isCurrent ? `<span style="font-size:12px; font-weight:900; color:var(--accent-blue)">Siz shu yerdasiz</span>` : ''}
+        </div>`;
+    });
+    document.getElementById("leagueList").innerHTML = h;
+}
+
+// --- INTERACTIONS (OPTIMIZED TAP) ---
+const tapSurface = document.getElementById("tapSurface");
+
+// QOTMASLIK UCHUN ENG ASOSIY FUNKSIYA: POINTERDOWN
+tapSurface.addEventListener("pointerdown", (e) => {
+    e.preventDefault(); 
+    
+    const power = tapPowers[tapLvl];
+    if (energy < power) {
+        if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+        return;
+    }
+
+    energy -= power;
+    coins += power;
+    totalCoins += power; 
+
+    // Tezkor Animatsiya (Floating number)
+    const n = document.createElement("div");
+    n.className = "tap-num";
+    n.innerText = "+" + power;
+    n.style.left = (e.clientX - 20) + "px";
+    n.style.top = (e.clientY - 50) + "px";
+    document.body.appendChild(n);
+    
+    setTimeout(() => n.remove(), 600);
+
+    const coinBtn = document.getElementById("coinBtn");
+    coinBtn.style.transform = "scale(0.92)";
+    setTimeout(() => { coinBtn.style.transform = "scale(1)"; }, 50);
+
+    if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    
+    updateUI();
+    if(Math.random() > 0.9) save(); 
+});
+
+// --- BUTTON ACTIONS ---
+function buy(type) {
+    let current = type === 'tap' ? tapLvl : limitLvl;
+    let cost = costs[current + 1];
+    if(coins >= cost) {
+        coins -= cost;
+        if(type === 'tap') tapLvl++; else limitLvl++;
+        updateUI(); save();
+    } else {
+        tg.showAlert("Mablag' yetarli emas!");
+    }
+}
+
+function useRefill() {
+    if(refillCount > 0) {
+        energy = limits[limitLvl];
+        refillCount--;
+        tg.showAlert("⚡ Energiya to'liq to'ldirildi!");
+        updateUI(); save();
+    }
+}
+
+// --- DAILY BONUS LOGIC ---
+function claimDailyBonus() {
+    const today = new Date().toLocaleDateString();
+    if(lastBonusDate === today) return;
+    
+    bonusStreak++;
+    coins += 10000;
+    totalCoins += 10000;
+    lastBonusDate = today;
+    
+    tg.showAlert("Tabriklaymiz! Kunlik bonus olindi: +10,000 🪙");
+    updateUI(); save();
+}
+
+let isSpinning = false;
+function doSpin() {
+    const today = new Date().toLocaleDateString();
+    if(lastSpinDate === today || isSpinning) return;
+    
+    isSpinning = true;
+    updateUI(); 
+    
+    const wheel = document.getElementById("wheel");
+    const randDeg = 1800 + Math.random() * 3600;
+    wheel.style.transform = `rotate(${randDeg}deg)`;
+    
+    setTimeout(() => {
+        isSpinning = false;
+        lastSpinDate = today;
+        spinTotalCount++; 
+
+        const prizes = [50000, 5000, 15000, 0, 100000, 2000];
+        const win = prizes[Math.floor(Math.random()*6)];
+        coins += win;
+        totalCoins += win;
+
+        tg.showAlert(win > 0 ? "Tabriklaymiz! +" + win + " 🪙" : "Bugun omad kelmadi. Ertaga qayting!");
+        updateUI(); save();
+    }, 4100);
+}
+
+function claimTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if(task && !completedTasks.includes(id)) {
+        coins += task.reward;
+        totalCoins += task.reward; 
+        completedTasks.push(id);
+        tg.showAlert("Mukofot olindi! +" + task.reward.toLocaleString() + " 🪙");
+        updateUI(); save();
+    }
+}
+
+// --- BACKGROUND LOOPS ---
+setInterval(() => {
+    if(energy < limits[limitLvl]) {
+        energy += 2;
+        if(energy > limits[limitLvl]) energy = limits[limitLvl];
+        updateUI();
+    }
+}, 1000);
+
+setInterval(save, 5000);
+
+// --- MODALS ---
+function openM(id) { closeAll(); document.getElementById(id).classList.add("open"); document.getElementById("overlay").style.display="block"; }
+function closeAll() { document.querySelectorAll(".modal").forEach(m => m.classList.remove("open")); document.getElementById("overlay").style.display="none"; }
+
+// START
+window.onload = updateUI;
+</script>
+</body>
+</html>
