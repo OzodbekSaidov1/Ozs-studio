@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>OZS TAP - FINAL PLATINUM EDITION</title>
+<title>OZS TAP - DYNAMIC LEAGUE EDITION</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -11,10 +11,11 @@
   :root {
     --bg-dark: #050608;
     --bg-card: #10121a;
-    --accent-blue: #00e5ff;
     --accent-gold: #ffcc00;
     --accent-green: #00ff88;
     --text-white: #ffffff;
+    /* DINAMIK LIGA RANGI (Asl holati Bronze) */
+    --theme-color: #cd7f32; 
   }
 
   * { 
@@ -32,7 +33,8 @@
     height: 100dvh; width: 100vw;
     overflow: hidden;
     display: flex; flex-direction: column;
-    background-image: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.05) 0%, transparent 60%);
+    /* Orqa fon ham liganing rangiga ozgina moslashadi */
+    background-image: radial-gradient(circle at 50% 0%, var(--theme-color) 0%, transparent 70%);
   }
 
   /* Intro Animation */
@@ -48,8 +50,9 @@
   .header { padding: 15px 20px 5px; display: flex; justify-content: space-between; align-items: center; }
   .league-badge { 
     padding: 6px 14px; border-radius: 20px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
-    text-transform: uppercase; border: 1px solid var(--accent-blue); color: var(--accent-blue);
+    text-transform: uppercase; border: 1px solid var(--theme-color); color: var(--theme-color);
     background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s;
+    box-shadow: 0 0 10px var(--theme-color);
   }
   .player-name { font-family: 'Orbitron'; font-size: 11px; color: #666; font-weight: 700; letter-spacing: 1px;}
 
@@ -59,9 +62,9 @@
     font-size: 52px; font-weight: 900; color: var(--accent-gold); font-family: 'Orbitron'; 
     text-shadow: 0 0 25px rgba(255,204,0,0.3); margin-top: 5px;
   }
-  .total-score-info { font-size: 11px; color: #888; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .total-score-info { font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--theme-color); text-shadow: 0 0 10px var(--theme-color); transition: 0.3s;}
 
-  /* Tap Container - Optimallashtirilgan */
+  /* Tap Container */
   .game-container { 
     flex: 1; display: flex; justify-content: center; align-items: center; position: relative; 
     touch-action: none; 
@@ -70,9 +73,10 @@
     width: 65vw; height: 65vw; max-width: 280px; max-height: 280px;
     background: radial-gradient(circle, #ffe600 0%, #ff9900 70%, #cc6600 100%);
     border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 0 50px rgba(255,153,0,0.3), inset 0 0 20px rgba(255,255,255,0.6);
+    /* Tanga atrofidagi nurlanish liganing rangiga qarab yonadi! */
+    box-shadow: 0 0 60px var(--theme-color), inset 0 0 20px rgba(255,255,255,0.6);
     border: 6px solid #b35900; font-size: 90px;
-    transition: transform 0.05s ease-out;
+    transition: transform 0.05s ease-out, box-shadow 0.3s;
     will-change: transform;
     pointer-events: auto;
   }
@@ -89,9 +93,10 @@
   .status-panel { padding: 10px 25px 20px; flex-shrink: 0; }
   .energy-info { display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 12px; margin-bottom: 8px; color:#ccc; }
   .bar-bg { width: 100%; height: 16px; background: #161a22; border-radius: 12px; border: 1px solid #2a2d3e; overflow: hidden; }
-  .bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #00e5ff, #0077ff); transition: width 0.1s linear; }
+  /* Energiya chizig'i liganing rangida to'ladi */
+  .bar-fill { height: 100%; width: 100%; background: var(--theme-color); transition: width 0.1s linear, background 0.3s; box-shadow: 0 0 10px var(--theme-color);}
 
-  /* Navbar - Gorizontal suriladigan (Scroll) qilib sozlangan */
+  /* Navbar */
   .navbar {
     display: flex; justify-content: flex-start; background: var(--bg-card); 
     padding: 12px 10px calc(15px + env(safe-area-inset-bottom, 0px));
@@ -102,14 +107,14 @@
   .navbar::-webkit-scrollbar { display: none; }
   .nav-btn { flex: 0 0 auto; background: transparent; border: none; color: #666; font-size: 10px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; min-width: 70px; padding: 5px; border-radius: 15px;}
   .nav-btn span { display: block; font-size: 22px; margin-bottom: 5px; }
-  .nav-btn.active, .nav-btn:active { color: var(--accent-blue); background: rgba(0,229,255,0.05); }
+  .nav-btn.active, .nav-btn:active { color: var(--theme-color); text-shadow: 0 0 10px var(--theme-color); }
 
   /* Modals */
   .modal {
     position: fixed; bottom: -100%; left: 0; width: 100%; height: 80dvh;
     background: var(--bg-card); border-radius: 35px 35px 0 0;
     z-index: 2000; transition: bottom 0.3s cubic-bezier(0.1, 0.7, 0.1, 1); padding: 30px 20px; overflow-y: auto;
-    border-top: 2px solid var(--accent-blue); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+    border-top: 2px solid var(--theme-color); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
   }
   .modal.open { bottom: 0; }
   .modal-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-family: 'Orbitron'; }
@@ -118,9 +123,10 @@
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
     padding: 18px 15px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
   }
-  .btn-buy { background: var(--accent-blue); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-family: 'Montserrat'; cursor: pointer; transition: 0.2s; }
+  /* Barcha tugmalar liganing rangiga kiradi */
+  .btn-buy { background: var(--theme-color); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-family: 'Montserrat'; cursor: pointer; transition: 0.2s; }
   .btn-buy:active { transform: scale(0.95); }
-  .btn-buy:disabled { background: #222; color: #555; transform: none; cursor: default;}
+  .btn-buy:disabled { background: #222; color: #555; transform: none; cursor: default; box-shadow: none;}
 
   #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; backdrop-filter: blur(4px); }
 </style>
@@ -128,7 +134,7 @@
 <body>
 
 <div id="intro">
-  <div style="font-family:'Orbitron'; font-size:55px; color:var(--accent-blue); text-shadow: 0 0 30px var(--accent-blue); text-align:center;">OZS STUDIO</div>
+  <div style="font-family:'Orbitron'; font-size:55px; color:var(--theme-color); text-shadow: 0 0 30px var(--theme-color); text-align:center;">OZS STUDIO</div>
   <p style="letter-spacing:6px; font-size:12px; color:#555; margin-top: 10px; font-weight:900;">PLATINUM EDITION</p>
 </div>
 
@@ -187,9 +193,9 @@
   <div class="modal-h"><h2>Omadli Spin</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
   <div style="text-align:center; padding: 20px 0;">
     <div style="position:relative; width: 260px; margin: 0 auto;">
-      <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #ff0055; z-index: 10;"></div>
+      <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--theme-color); z-index: 10;"></div>
       <svg id="wheel" viewBox="0 0 100 100" style="width: 100%; transition: transform 4s cubic-bezier(0.15, 0, 0.1, 1);">
-        <circle cx="50" cy="50" r="48" fill="#131622" stroke="#ffcc00" stroke-width="2"/>
+        <circle cx="50" cy="50" r="48" fill="#131622" stroke="var(--theme-color)" stroke-width="2"/>
         <path d="M50 50 L50 2 A48 48 0 0 1 92 26 Z" fill="#ffcc00"/><text x="65" y="25" fill="black" font-size="5" font-weight="bold" transform="rotate(30, 65, 25)">50k</text>
         <path d="M50 50 L92 26 A48 48 0 0 1 92 74 Z" fill="#00e5ff"/><text x="80" y="52" fill="black" font-size="5" font-weight="bold">5k</text>
         <path d="M50 50 L92 74 A48 48 0 0 1 50 98 Z" fill="#ffcc00"/><text x="65" y="80" fill="black" font-size="5" font-weight="bold">15k</text>
@@ -209,7 +215,7 @@
     <span style="font-size:80px; filter: drop-shadow(0 0 20px var(--accent-gold)); display:block; margin-bottom: 20px;">🎁</span>
     <h2 id="streakTxt" style="color: var(--accent-gold); font-family: 'Orbitron'; font-size: 28px;">Kun: 0</h2>
     <p style="opacity: 0.7; font-size: 14px; margin-top: 10px;">Har kuni ilovaga kiring va bepul <b style="color:var(--accent-gold);">10,000 tanga</b> oling!</p>
-    <button id="claimBonusBtn" class="btn-buy" style="width:100%; height:60px; margin-top:30px; font-size: 16px;" onclick="claimDailyBonus()">BONUSNI OLISH (+10,000)</button>
+    <button id="claimBonusBtn" class="btn-buy" style="width:100%; height:60px; margin-top:30px; font-size: 16px; background: var(--accent-green); color:#000;" onclick="claimDailyBonus()">BONUSNI OLISH (+10,000)</button>
   </div>
 </div>
 
@@ -221,9 +227,9 @@
 
 <div id="walletM" class="modal">
   <div class="modal-h"><h2>Hamyon</h2><span onclick="closeAll()" style="font-size:25px; cursor:pointer;">✕</span></div>
-  <div style="background:linear-gradient(135deg, #1e2548, #0a0c1a); padding:40px 20px; border-radius:30px; text-align:center; border: 1px solid rgba(0,229,255,0.3);">
+  <div style="background:linear-gradient(135deg, #1e2548, #0a0c1a); padding:40px 20px; border-radius:30px; text-align:center; border: 1px solid var(--theme-color); box-shadow: inset 0 0 30px rgba(0,0,0,0.5);">
       <p style="font-size:12px; opacity:0.7; letter-spacing: 2px; font-weight: 700;">ASSETS VALUE</p>
-      <h1 id="usdValWallet" style="color:var(--accent-blue); font-family:'Orbitron'; font-size: 45px; margin:15px 0;">$0.0000</h1>
+      <h1 id="usdValWallet" style="color:var(--theme-color); font-family:'Orbitron'; font-size: 45px; margin:15px 0; text-shadow: 0 0 20px var(--theme-color);">$0.0000</h1>
   </div>
   <button class="btn-buy" style="width:100%; height:60px; margin-top:30px; background:#fff; color:#000; font-size: 16px;" onclick="tg.showAlert('Pul yechish tizimi tez kunlarda mavjud bo\'ladi! ⏳')">💳 PUL YECHISH</button>
 </div>
@@ -270,8 +276,6 @@ let spinTotalCount = Number(localStorage.getItem("ozs_f_spinTotal")) || 0;
 let completedTasks = JSON.parse(localStorage.getItem("ozs_f_tasks")) || [];
 let lastBonusDate = localStorage.getItem("ozs_f_bonusDate") || "";
 let bonusStreak = Number(localStorage.getItem("ozs_f_streak")) || 0;
-
-// OFFLINE ENERGY UCHUN VAQT
 let lastSaveTime = Number(localStorage.getItem("ozs_f_lastTime")) || Date.now();
 
 // --- CONFIGURATIONS ---
@@ -279,12 +283,12 @@ const tapPowers = [1, 2, 5, 12, 24, 50, 100];
 const limits = [1000, 2000, 5000, 10000, 25000, 50000, 100000];
 const costs = [0, 1000, 5000, 20000, 100000, 500000, 2000000];
 
-// 10 ta LIGA TIZIMI
+// 10 ta LIGA TIZIMI (Ranglar bilan)
 const leagues = [
     { name: "Bronze", min: 0, color: "#cd7f32" },
     { name: "Silver", min: 50000, color: "#c0c0c0" },
     { name: "Gold", min: 250000, color: "#ffd700" },
-    { name: "Platinum", min: 1000000, color: "#e5e4e2" },
+    { name: "Platinum", min: 1000000, color: "#00e5ff" }, // O'zgarish (Moviyroq)
     { name: "Diamond", min: 5000000, color: "#b9f2ff" },
     { name: "Elite", min: 10000000, color: "#9d00ff" },
     { name: "Master", min: 25000000, color: "#ff4d00" },
@@ -293,7 +297,7 @@ const leagues = [
     { name: "Red Diamond", min: 1000000000, color: "#ff0000" }
 ];
 
-// TOPSHIRIQLAR (TASKS)
+// TOPSHIRIQLAR
 const tasks = [
     { id: 't_spin1', title: '1 marta baraban aylantiring', type: 'spin', goal: 1, reward: 10000 },
     { id: 't_spin3', title: 'Ketma-ket 3 kun baraban aylantiring', type: 'spin', goal: 3, reward: 10000 },
@@ -316,17 +320,16 @@ function save() {
     localStorage.setItem("ozs_f_tasks", JSON.stringify(completedTasks));
     localStorage.setItem("ozs_f_bonusDate", lastBonusDate);
     localStorage.setItem("ozs_f_streak", bonusStreak);
-    localStorage.setItem("ozs_f_lastTime", Date.now()); // Oxirgi faoliyat vaqtini saqlash
+    localStorage.setItem("ozs_f_lastTime", Date.now()); 
 }
 
-// OFFLINE ENERGY HISOBLASH
 function calculateOfflineEnergy() {
     const now = Date.now();
     const diffSeconds = Math.floor((now - lastSaveTime) / 1000);
 
     if (diffSeconds > 0) {
         const maxE = limits[limitLvl];
-        const regenAmount = diffSeconds * 2; // Har sekundda 2 energiya tiklanadi
+        const regenAmount = diffSeconds * 2; 
         if (energy < maxE) {
             energy += regenAmount;
             if (energy > maxE) energy = maxE;
@@ -346,19 +349,18 @@ function updateUI() {
     let usd = (coins / 1000000) * 0.25;
     document.getElementById("usdValWallet").innerText = "$" + usd.toFixed(4);
 
-    // League Calculation
+    // DYNAMIC THEME (LIGA HISOBI)
     let currentLeague = leagues[0];
     for(let i=0; i<leagues.length; i++) {
         if(totalCoins >= leagues[i].min) currentLeague = leagues[i];
     }
     
+    // Asosiy CSS o'zgaruvchiga liganing rangini berish
+    document.documentElement.style.setProperty('--theme-color', currentLeague.color);
+
     const badge = document.getElementById("leagueBadge");
     badge.innerText = currentLeague.name;
-    badge.style.color = currentLeague.color;
-    badge.style.borderColor = currentLeague.color;
-    badge.style.boxShadow = `0 0 10px ${currentLeague.color}40`; 
     document.getElementById("leagueName").innerText = currentLeague.name + " LEAGUE";
-    document.getElementById("leagueName").style.color = currentLeague.color;
 
     // Daily Checks
     const today = new Date().toLocaleDateString();
@@ -368,7 +370,7 @@ function updateUI() {
     if(lastSpinDate === today) {
         spinBtn.disabled = true; spinBtn.innerText = "ERTAGA QAYTING"; spinBtn.style.background = "#333";
     } else {
-        spinBtn.disabled = false; spinBtn.innerText = "AYLANTIRISH (1 KUNDA 1 MARTA)"; spinBtn.style.background = "var(--accent-blue)";
+        spinBtn.disabled = false; spinBtn.innerText = "AYLANTIRISH (1 KUNDA 1 MARTA)"; spinBtn.style.background = "var(--theme-color)";
     }
 
     // Daily Bonus Check
@@ -377,7 +379,7 @@ function updateUI() {
     if(lastBonusDate === today) {
         claimBtn.disabled = true; claimBtn.innerText = "ERTANGA QAYTING"; claimBtn.style.background = "#333"; claimBtn.style.color = "#555";
     } else {
-        claimBtn.disabled = false; claimBtn.innerText = "BONUSNI OLISH (+10,000)"; claimBtn.style.background = "var(--accent-green)"; claimBtn.style.color = "#000";
+        claimBtn.disabled = false; claimBtn.innerText = "BONUSNI OLISH (+10,000)"; claimBtn.style.background = "var(--theme-color)"; claimBtn.style.color = "#000";
     }
 
     // Refill Check
@@ -407,7 +409,7 @@ function renderBoosts() {
     let nextLim = limitLvl + 1;
     let isLimMax = nextLim >= limits.length;
     h += `<div class="item-card">
-        <div><p style="font-weight:900; font-size:15px;">Energy Limit Lvl ${limitLvl+1}</p><p style="font-size:12px; color:var(--accent-blue); margin-top:5px;">Limit: ${isLimMax ? 'MAX' : limits[nextLim].toLocaleString()}</p></div>
+        <div><p style="font-weight:900; font-size:15px;">Energy Limit Lvl ${limitLvl+1}</p><p style="font-size:12px; color:var(--theme-color); margin-top:5px;">Limit: ${isLimMax ? 'MAX' : limits[nextLim].toLocaleString()}</p></div>
         <button class="btn-buy" onclick="buy('lim')" ${isLimMax || coins < costs[nextLim] ? 'disabled' : ''}>${isLimMax ? 'MAX' : costs[nextLim].toLocaleString()}</button>
     </div>`;
     document.getElementById("boostList").innerHTML = h;
@@ -421,7 +423,7 @@ function renderTasks() {
         const canClaim = !isDone && progress >= t.goal;
         
         h += `<div class="item-card">
-            <div><p style="font-weight:900; font-size:14px;">${t.title}</p><p style="font-size:12px; color:var(--accent-gold); margin-top:5px;">Mukofot: +${t.reward.toLocaleString()}</p></div>
+            <div><p style="font-weight:900; font-size:14px;">${t.title}</p><p style="font-size:12px; color:var(--theme-color); margin-top:5px;">Mukofot: +${t.reward.toLocaleString()}</p></div>
             <button class="btn-buy" onclick="claimTask('${t.id}')" ${!canClaim ? 'disabled' : ''} style="${isDone ? 'background:var(--accent-green); color:#000;' : ''}">
                 ${isDone ? 'BAJARILDI' : (canClaim ? 'OLISH' : 'KUTISH')}
             </button>
@@ -436,7 +438,7 @@ function renderLeagues(currentName) {
         const isCurrent = l.name === currentName;
         h += `<div class="item-card" style="border-left: 4px solid ${l.color}; ${isCurrent ? 'background:rgba(255,255,255,0.08);' : ''}">
             <div><p style="font-weight:900; font-size:15px; color:${l.color}">${l.name}</p><p style="font-size:12px; color:#888; margin-top:5px;">Min: ${l.min.toLocaleString()} tanga</p></div>
-            ${isCurrent ? `<span style="font-size:12px; font-weight:900; color:var(--accent-blue)">Siz shu yerdasiz</span>` : ''}
+            ${isCurrent ? `<span style="font-size:12px; font-weight:900; color:var(--theme-color)">Siz shu yerdasiz</span>` : ''}
         </div>`;
     });
     document.getElementById("leagueList").innerHTML = h;
@@ -458,12 +460,13 @@ tapSurface.addEventListener("pointerdown", (e) => {
     coins += power;
     totalCoins += power; 
 
-    // Tezkor Animatsiya
     const n = document.createElement("div");
     n.className = "tap-num";
     n.innerText = "+" + power;
     n.style.left = (e.clientX - 20) + "px";
     n.style.top = (e.clientY - 50) + "px";
+    // Tanga bosganda chiqadigan yozuv ham liganing rangida bo'ladi
+    n.style.color = getComputedStyle(document.documentElement).getPropertyValue('--theme-color');
     document.body.appendChild(n);
     
     setTimeout(() => n.remove(), 600);
@@ -566,7 +569,7 @@ setInterval(save, 5000);
 function openM(id) { closeAll(); document.getElementById(id).classList.add("open"); document.getElementById("overlay").style.display="block"; }
 function closeAll() { document.querySelectorAll(".modal").forEach(m => m.classList.remove("open")); document.getElementById("overlay").style.display="none"; }
 
-// START (Oflayn energiya hisoblanib keyin UI yangilanadi)
+// START
 window.onload = () => {
     calculateOfflineEnergy();
     updateUI();
