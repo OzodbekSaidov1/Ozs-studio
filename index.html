@@ -1,756 +1,158 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>OZS TAP - DYNAMIC LEAGUE EDITION</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>OZS TAP - Texnik To'xtalish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-dark: #07090f;
+            --accent-blue: #00e5ff;
+            --accent-gold: #ffd700;
+            --text-white: #ffffff;
+        }
 
-<style>
-  :root {
-    --bg-dark: #050608;
-    --bg-card: #10121a;
-    --accent-gold: #ffcc00;
-    --accent-green: #00ff88;
-    --text-white: #ffffff;
-    --theme-color: #cd7f32; 
-  }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
-  * { 
-    box-sizing: border-box; 
-    margin: 0; padding: 0; 
-    user-select: none; 
-    -webkit-user-select: none; 
-    -webkit-tap-highlight-color: transparent; 
-  }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 20%, #1a1f35 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, #0d1117 0%, transparent 50%);
+            color: var(--text-white);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+        }
 
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--bg-dark);
-    color: var(--text-white);
-    height: 100dvh; width: 100vw;
-    overflow: hidden;
-    display: flex; flex-direction: column;
-    /* background-image JS dan qo'yiladi — applyTheme() */
-  }
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
 
-  #intro {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: #000; z-index: 9999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    animation: fadeOut 1.2s forwards 2s; 
-  }
-  @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
+        .icon-box {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px var(--accent-blue));
+            animation: pulse 2s infinite;
+        }
 
-  .header { padding: 15px 20px 5px; display: flex; justify-content: space-between; align-items: center; }
-  .league-badge { 
-    padding: 6px 14px; border-radius: 20px; font-family: 'Orbitron'; font-size: 11px; font-weight: 900;
-    text-transform: uppercase; border: 1px solid var(--theme-color); color: var(--theme-color);
-    background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: all 0.4s;
-    box-shadow: 0 0 10px var(--theme-color);
-  }
-  .player-name { font-family: 'Orbitron'; font-size: 11px; color: #666; font-weight: 700; letter-spacing: 1px;}
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
-  .score-section { text-align: center; margin-top: 3vh; flex-shrink: 0; }
-  .score-section h1 { 
-    font-size: 52px; font-weight: 900; color: var(--accent-gold); font-family: 'Orbitron'; 
-    text-shadow: 0 0 25px rgba(255,204,0,0.3); margin-top: 5px;
-  }
-  .total-score-info { font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--theme-color); text-shadow: 0 0 10px var(--theme-color); transition: 0.3s;}
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
 
-  .game-container { 
-    flex: 1; display: flex; justify-content: center; align-items: center; position: relative; 
-    touch-action: none; 
-  }
-  .main-coin {
-    width: 65vw; height: 65vw; max-width: 280px; max-height: 280px;
-    background: radial-gradient(circle, #ffe600 0%, #ff9900 70%, #cc6600 100%);
-    border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    box-shadow: 0 0 60px var(--theme-color), inset 0 0 20px rgba(255,255,255,0.6);
-    border: 6px solid #b35900; font-size: 90px;
-    transition: transform 0.05s ease-out, box-shadow 0.3s;
-    will-change: transform; pointer-events: auto;
-  }
-  .main-coin:active { transform: scale(0.92); }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #abb2bf;
+            margin-bottom: 30px;
+        }
 
-  .tap-num { 
-    position: absolute; color: white; font-size: 38px; font-weight: 900; pointer-events: none; 
-    animation: floatUp 0.6s ease-out forwards; font-family: 'Orbitron'; z-index: 100; text-shadow: 0 3px 10px rgba(0,0,0,0.5);
-  }
-  @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-150px); opacity: 0; } }
+        .status-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+        }
 
-  .status-panel { padding: 10px 25px 20px; flex-shrink: 0; }
-  .energy-info { display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 12px; margin-bottom: 8px; color:#ccc; }
-  .bar-bg { width: 100%; height: 16px; background: #161a22; border-radius: 12px; border: 1px solid #2a2d3e; overflow: hidden; }
-  .bar-fill { height: 100%; width: 100%; background: var(--theme-color); transition: width 0.1s linear, background 0.3s; box-shadow: 0 0 10px var(--theme-color);}
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
 
-  .navbar {
-    display: flex; justify-content: flex-start; background: var(--bg-card); 
-    padding: 12px 10px calc(15px + env(safe-area-inset-bottom, 0px));
-    border-radius: 25px 25px 0 0; border-top: 1px solid rgba(255,255,255,0.05); 
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
-    overflow-x: auto; scrollbar-width: none; gap: 8px;
-  }
-  .navbar::-webkit-scrollbar { display: none; }
-  .nav-btn { flex: 0 0 auto; background: transparent; border: none; color: #666; font-size: 10px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; min-width: 70px; padding: 5px; border-radius: 15px;}
-  .nav-btn span { display: block; font-size: 22px; margin-bottom: 5px; }
-  .nav-btn.active, .nav-btn:active { color: var(--theme-color); text-shadow: 0 0 10px var(--theme-color); }
+        .btn-channel {
+            display: inline-block;
+            width: 100%;
+            background: var(--accent-blue);
+            color: #000;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-top: 20px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
 
-  .modal {
-    position: fixed; bottom: -100%; left: 0; width: 100%; height: 80dvh;
-    background: var(--bg-card); border-radius: 35px 35px 0 0;
-    z-index: 2000; transition: bottom 0.3s cubic-bezier(0.1, 0.7, 0.1, 1); padding: 30px 20px; overflow-y: auto;
-    border-top: 2px solid var(--theme-color); box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
-  }
-  .modal.open { bottom: 0; }
-  .modal-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-family: 'Orbitron'; }
-  .item-card {
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-    padding: 18px 15px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-  }
-  .btn-buy { background: var(--theme-color); color: #000; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 900; font-family: 'Montserrat'; cursor: pointer; transition: 0.2s; }
-  .btn-buy:active { transform: scale(0.95); }
-  .btn-buy:disabled { background: #222; color: #555; transform: none; cursor: default; box-shadow: none;}
+        .btn-channel:active {
+            transform: scale(0.95);
+        }
 
-  .task-category { font-size: 10px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
-  .cat-social    { background: rgba(220,39,112,0.2); color: #e91e8c; border: 1px solid rgba(220,39,112,0.3); }
-  .cat-tap       { background: rgba(255,204,0,0.15); color: var(--accent-gold); border: 1px solid rgba(255,204,0,0.3); }
-  .cat-league    { background: rgba(0,229,255,0.15); color: #00e5ff; border: 1px solid rgba(0,229,255,0.3); }
-  .cat-daily     { background: rgba(0,255,136,0.15); color: var(--accent-green); border: 1px solid rgba(0,255,136,0.3); }
-  .cat-milestone { background: rgba(157,0,255,0.15); color: #c77dff; border: 1px solid rgba(157,0,255,0.3); }
-
-  #igVerifyModal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.92); z-index: 3000;
-    display: none; flex-direction: column; justify-content: center; align-items: center;
-    padding: 30px; backdrop-filter: blur(10px);
-  }
-  #igVerifyModal.show { display: flex; }
-  .ig-modal-box { background: #10121a; border: 2px solid #e91e8c; border-radius: 30px; padding: 35px 25px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 0 60px rgba(233,30,140,0.3); }
-  .ig-progress-bar { width: 100%; height: 6px; background: #1a1a2e; border-radius: 5px; margin: 20px 0; overflow: hidden; display: none; }
-  .ig-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border-radius: 5px; transition: width 3s linear; }
-
-  /* Liga o'zgarishi popup */
-  #leagueUpPopup {
-    position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: #0d0f1a; border-radius: 30px; padding: 35px 50px;
-    z-index: 9500; text-align: center; pointer-events: none; opacity: 0;
-    transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-  }
-  #leagueUpPopup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-
-  .notif-pop {
-    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-120px);
-    background: #10121a; border: 1px solid var(--theme-color);
-    padding: 14px 24px; border-radius: 20px; font-family: 'Orbitron'; font-size: 13px; font-weight: 900;
-    color: var(--theme-color); z-index: 9000; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-    box-shadow: 0 0 30px var(--theme-color); white-space: nowrap;
-  }
-  .notif-pop.show { transform: translateX(-50%) translateY(0); }
-
-  .task-progress-bar { width: 100%; height: 5px; background: #1e2030; border-radius: 5px; margin-top: 8px; overflow: hidden; }
-  .task-progress-fill { height: 100%; background: var(--theme-color); border-radius: 5px; transition: width 0.5s ease; }
-
-  #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1500; backdrop-filter: blur(4px); }
-</style>
+        .footer-text {
+            position: absolute;
+            bottom: 30px;
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 3px;
+            font-family: 'Orbitron', sans-serif;
+        }
+    </style>
 </head>
 <body>
 
-<div id="intro">
-  <div style="font-family:'Orbitron';font-size:55px;color:var(--theme-color);text-shadow:0 0 30px var(--theme-color);text-align:center;">OZS STUDIO</div>
-  <p style="letter-spacing:6px;font-size:12px;color:#555;margin-top:10px;font-weight:900;">PLATINUM EDITION</p>
-</div>
-
-<!-- Liga o'zgarishi popup -->
-<div id="leagueUpPopup">
-  <div id="lgEmoji" style="font-size:65px;margin-bottom:10px;">🏆</div>
-  <div style="font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:#888;margin-bottom:8px;">YANGI LIGA!</div>
-  <div id="lgName" style="font-family:'Orbitron';font-size:28px;font-weight:900;margin-bottom:6px;"></div>
-  <div style="font-size:13px;color:#aaa;">Tabriklaymiz! 🎉</div>
-</div>
-
-<!-- Instagram Verify Modal -->
-<div id="igVerifyModal">
-  <div class="ig-modal-box">
-    <div style="font-size:60px;margin-bottom:15px;">📸</div>
-    <h2 style="font-family:'Orbitron';font-size:18px;margin-bottom:10px;">Instagram Obuna</h2>
-    <p style="font-size:13px;color:#aaa;line-height:1.6;margin-bottom:5px;">
-      <strong style="color:white;">@0zodbek.saidov</strong> akkauntiga obuna bo'ling va <strong style="color:#ffd700;">100,000 tanga</strong> qo'lga kiriting!
-    </p>
-    <div class="ig-progress-bar" id="igProgressBar"><div class="ig-progress-fill" id="igProgressFill"></div></div>
-    <p id="igStatusText" style="font-size:11px;color:#666;margin-bottom:20px;min-height:16px;"></p>
-    <button id="igOpenBtn" onclick="igStep1()" style="width:100%;padding:18px;background:linear-gradient(45deg,#f09433,#dc2743,#cc2366);color:white;border:none;border-radius:16px;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:10px;">📲 INSTAGRAM'GA O'TISH</button>
-    <button id="igVerifyBtn" onclick="igStep2()" disabled style="width:100%;padding:18px;background:#1a1a2e;color:#555;border:2px solid #222;border-radius:16px;font-weight:900;font-size:15px;cursor:default;margin-bottom:10px;">✅ OBUNA BO'LDIM — TEKSHIRISH</button>
-    <button onclick="closeIgModal()" style="width:100%;padding:12px;background:transparent;color:#444;border:none;font-size:13px;cursor:pointer;font-weight:700;">BEKOR QILISH</button>
-  </div>
-</div>
-
-<div class="notif-pop" id="notifPop"></div>
-
-<div class="header">
-  <div class="player-name">👤 <span id="userDisplay">Player</span></div>
-  <div class="league-badge" id="leagueBadge">Bronze</div>
-</div>
-<div class="score-section">
-  <div class="total-score-info" id="leagueName">BRONZE LEAGUE</div>
-  <h1 id="balance">0</h1>
-</div>
-<div class="game-container" id="tapSurface">
-  <div class="main-coin" id="coinBtn">🪙</div>
-</div>
-<div class="status-panel">
-  <div class="energy-info"><span>⚡ ENERGY</span><span id="energyVal">1000 / 1000</span></div>
-  <div class="bar-bg"><div class="bar-fill" id="energyFill"></div></div>
-</div>
-
-<div class="navbar">
-  <button class="nav-btn" onclick="openM('boostM')"><span>🚀</span>Boost</button>
-  <button class="nav-btn" onclick="openM('taskM')"><span>📋</span>Tasks</button>
-  <button class="nav-btn" onclick="openM('spinM')"><span>🎡</span>Spin</button>
-  <button class="nav-btn" onclick="openM('bonusM')"><span>🎁</span>Bonus</button>
-  <button class="nav-btn" onclick="openM('statsM')"><span>🏆</span>League</button>
-  <button class="nav-btn" onclick="openM('walletM')"><span>💰</span>Wallet</button>
-  <button class="nav-btn" onclick="openM('supportM')"><span>🎧</span>Support</button>
-</div>
-<div id="overlay" onclick="closeAll()"></div>
-
-<!-- BOOST -->
-<div id="boostM" class="modal">
-  <div class="modal-h"><h2>Boosters</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <div id="boostList"></div>
-  <hr style="border:0;border-top:1px solid rgba(255,255,255,0.1);margin:25px 0 20px;">
-  <h4 style="margin-bottom:15px;opacity:0.8;">Bepul Energiya</h4>
-  <div class="item-card" style="border-color:var(--accent-gold);">
-    <div><p style="font-weight:900;font-size:15px;">Full Tank ⚡</p><p id="refillLabel" style="font-size:12px;color:var(--accent-gold);margin-top:5px;">Qoldi: 3/3</p></div>
-    <button id="refillBtn" class="btn-buy" style="background:var(--accent-gold);" onclick="useRefill()">TO'LDIRISH</button>
-  </div>
-</div>
-
-<!-- TASK -->
-<div id="taskM" class="modal">
-  <div class="modal-h"><h2>Topshiriqlar</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <p style="font-size:13px;color:#aaa;margin-bottom:20px;">Topshiriqlarni bajaring va katta mukofotlar qo'lga kiriting!</p>
-  <div id="taskList"></div>
-</div>
-
-<!-- SPIN -->
-<div id="spinM" class="modal">
-  <div class="modal-h"><h2>Omadli Spin</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <div style="text-align:center;padding:20px 0;">
-    <div style="position:relative;width:260px;margin:0 auto;">
-      <div style="position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:30px solid var(--theme-color);z-index:10;"></div>
-      <svg id="wheel" viewBox="0 0 100 100" style="width:100%;transition:transform 4s cubic-bezier(0.15,0,0.1,1);">
-        <circle cx="50" cy="50" r="48" fill="#131622" stroke="var(--theme-color)" stroke-width="2"/>
-        <path d="M50 50 L50 2 A48 48 0 0 1 92 26 Z" fill="#ffcc00"/><text x="65" y="25" fill="black" font-size="5" font-weight="bold" transform="rotate(30,65,25)">50k</text>
-        <path d="M50 50 L92 26 A48 48 0 0 1 92 74 Z" fill="#00e5ff"/><text x="80" y="52" fill="black" font-size="5" font-weight="bold">5k</text>
-        <path d="M50 50 L92 74 A48 48 0 0 1 50 98 Z" fill="#ffcc00"/><text x="65" y="80" fill="black" font-size="5" font-weight="bold">15k</text>
-        <path d="M50 50 L50 98 A48 48 0 0 1 8 74 Z" fill="#00e5ff"/><text x="25" y="80" fill="black" font-size="5" font-weight="bold">0</text>
-        <path d="M50 50 L8 74 A48 48 0 0 1 8 26 Z" fill="#ffcc00"/><text x="10" y="52" fill="black" font-size="5" font-weight="bold">100k</text>
-        <path d="M50 50 L8 26 A48 48 0 0 1 50 2 Z" fill="#00e5ff"/><text x="25" y="25" fill="black" font-size="5" font-weight="bold">2k</text>
-        <circle cx="50" cy="50" r="5" fill="white"/>
-      </svg>
-    </div>
-    <button id="spinBtn" class="btn-buy" style="width:100%;height:60px;margin-top:30px;font-size:16px;" onclick="doSpin()">AYLANTIRISH (1 KUNDA 1 MARTA)</button>
-  </div>
-</div>
-
-<!-- BONUS -->
-<div id="bonusM" class="modal">
-  <div class="modal-h"><h2>Kunlik Bonus</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <div style="text-align:center;padding:20px 0;">
-    <span style="font-size:80px;filter:drop-shadow(0 0 20px var(--accent-gold));display:block;margin-bottom:20px;">🎁</span>
-    <h2 id="streakTxt" style="color:var(--accent-gold);font-family:'Orbitron';font-size:28px;">Kun: 0</h2>
-    <p style="opacity:0.7;font-size:14px;margin-top:10px;">Har kuni ilovaga kiring va bepul <b style="color:var(--accent-gold);">10,000 tanga</b> oling!</p>
-    <button id="claimBonusBtn" class="btn-buy" style="width:100%;height:60px;margin-top:30px;font-size:16px;background:var(--accent-green);color:#000;" onclick="claimDailyBonus()">BONUSNI OLISH (+10,000)</button>
-  </div>
-</div>
-
-<!-- LEAGUE -->
-<div id="statsM" class="modal">
-  <div class="modal-h"><h2>Ligalar</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <p style="font-size:12px;color:#888;margin-bottom:20px;">Ligalar jami ishlangan tangalaringiz hisobidan o'sadi.</p>
-  <div id="leagueList"></div>
-</div>
-
-<!-- WALLET -->
-<div id="walletM" class="modal">
-  <div class="modal-h"><h2>Hamyon</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <div style="background:linear-gradient(135deg,#1e2548,#0a0c1a);padding:40px 20px;border-radius:30px;text-align:center;border:1px solid var(--theme-color);box-shadow:inset 0 0 30px rgba(0,0,0,0.5);">
-    <p style="font-size:12px;opacity:0.7;letter-spacing:2px;font-weight:700;">ASSETS VALUE</p>
-    <h1 id="usdValWallet" style="color:var(--theme-color);font-family:'Orbitron';font-size:45px;margin:15px 0;text-shadow:0 0 20px var(--theme-color);">$0.0000</h1>
-  </div>
-  <button class="btn-buy" style="width:100%;height:60px;margin-top:30px;background:#fff;color:#000;font-size:16px;" onclick="tg.showAlert('Pul yechish tizimi tez kunlarda mavjud bo\'ladi! ⏳')">💳 PUL YECHISH</button>
-</div>
-
-<!-- SUPPORT -->
-<div id="supportM" class="modal">
-  <div class="modal-h"><h2>Support</h2><span onclick="closeAll()" style="font-size:25px;cursor:pointer;">✕</span></div>
-  <div style="text-align:center;padding:20px 0;">
-    <div style="font-size:60px;margin-bottom:10px;">👤</div>
-    <h2 style="font-family:'Orbitron';margin-bottom:5px;">0zodbek Saidov</h2>
-    <p style="opacity:0.5;font-size:12px;margin-bottom:25px;">OZS Studio Founder & Developer</p>
-    <a href="https://instagram.com/0zodbek.saidov" target="_blank" class="item-card" style="text-decoration:none;color:white;background:linear-gradient(45deg,#f09433,#dc2743);border:none;">
-      <div style="display:flex;align-items:center;gap:15px;">
-        <span style="font-size:30px;">📸</span>
-        <div style="text-align:left;"><p style="font-weight:900;margin:0;font-size:16px;">Instagram</p><p style="font-size:12px;color:white;opacity:0.9;margin-top:3px;">@0zodbek.saidov</p></div>
-      </div>
-      <span style="font-size:24px;">→</span>
-    </a>
-    <p style="font-size:12px;color:#777;margin-top:20px;line-height:1.5;">O'yin bo'yicha takliflar yoki savollaringiz bo'lsa, Instagram orqali bog'lanishingiz mumkin.</p>
-  </div>
-</div>
-
-<script>
-// ================================================
-// TELEGRAM
-// ================================================
-const tg = window.Telegram?.WebApp || {
-  expand:()=>{}, enableClosingConfirmation:()=>{},
-  initDataUnsafe:{user:{first_name:"Gamer"}},
-  showAlert:(m)=>alert(m),
-  HapticFeedback:{impactOccurred:()=>{},notificationOccurred:()=>{}}
-};
-tg.expand();
-tg.enableClosingConfirmation();
-document.getElementById("userDisplay").innerText = tg.initDataUnsafe?.user?.first_name || "Gamer";
-
-// ================================================
-// STATE
-// FIX 1: totalCoins ni to'g'ri yuklash
-// Eski kod:  Number(localStorage.getItem("ozs_f_totalCoins")) || coins
-// Muammo:    agar stored = "0" yoki null => 0 || coins = coins (noto'g'ri)
-// Yangi kod: stored mavjud bo'lsa, max(stored, coins) olinadi
-// ================================================
-const coins_stored      = localStorage.getItem("ozs_f_coins");
-const totalCoins_stored = localStorage.getItem("ozs_f_totalCoins");
-
-let coins      = coins_stored !== null ? Number(coins_stored) : 0;
-let totalCoins = totalCoins_stored !== null
-                 ? Math.max(Number(totalCoins_stored), coins)
-                 : coins;
-
-let energy         = Number(localStorage.getItem("ozs_f_energy"))    || 1000;
-let tapLvl         = Number(localStorage.getItem("ozs_f_tapLvl"))    || 0;
-let limitLvl       = Number(localStorage.getItem("ozs_f_limitLvl"))  || 0;
-let refillCount    = Number(localStorage.getItem("ozs_f_refills"))   || 3;
-let lastRefillDate = localStorage.getItem("ozs_f_refillDate") || "";
-let lastSpinDate   = localStorage.getItem("ozs_f_spinDate")   || "";
-let spinTotalCount = Number(localStorage.getItem("ozs_f_spinTotal")) || 0;
-let tapTotalCount  = Number(localStorage.getItem("ozs_f_tapTotal"))  || 0;
-let completedTasks = JSON.parse(localStorage.getItem("ozs_f_tasks")) || [];
-let lastBonusDate  = localStorage.getItem("ozs_f_bonusDate")  || "";
-let bonusStreak    = Number(localStorage.getItem("ozs_f_streak"))    || 0;
-let lastSaveTime   = Number(localStorage.getItem("ozs_f_lastTime"))  || Date.now();
-let igFollowed     = localStorage.getItem("ozs_f_igFollowed") === "true";
-let refillUsedTotal  = Number(localStorage.getItem("ozs_f_refillUsed"))   || 0;
-let tapUpgradeCount  = Number(localStorage.getItem("ozs_f_tapUpgrades"))  || 0;
-
-// FIX 2: oldingi liga nomini eslab qolish — popup uchun
-let _prevLeagueName   = localStorage.getItem("ozs_f_prevLeague") || null;
-let _leaguePopupTimer = null;
-let igVerifyReady     = false;
-
-// ================================================
-// CONFIG
-// ================================================
-const tapPowers = [1, 2, 5, 12, 24, 50, 100];
-const limits    = [1000, 2000, 5000, 10000, 25000, 50000, 100000];
-const costs     = [0, 1000, 5000, 20000, 100000, 500000, 2000000];
-
-const leagues = [
-  { name:"Bronze",      min:0,          color:"#cd7f32", emoji:"🥉" },
-  { name:"Silver",      min:50000,      color:"#c0c0c0", emoji:"🥈" },
-  { name:"Gold",        min:250000,     color:"#ffd700", emoji:"🥇" },
-  { name:"Platinum",    min:1000000,    color:"#00e5ff", emoji:"💠" },
-  { name:"Diamond",     min:5000000,    color:"#b9f2ff", emoji:"💎" },
-  { name:"Elite",       min:10000000,   color:"#9d00ff", emoji:"⚜️" },
-  { name:"Master",      min:25000000,   color:"#ff4d00", emoji:"🔥" },
-  { name:"Grandmaster", min:50000000,   color:"#00ff88", emoji:"👑" },
-  { name:"Legendary",   min:100000000,  color:"#ff0055", emoji:"🌟" },
-  { name:"Red Diamond", min:1000000000, color:"#ff0000", emoji:"🔴" }
-];
-
-const tasks = [
-  {id:'t_ig_follow',   cat:'social',    catL:'📸 Ijtimoiy Tarmoq',    e:'📸', title:"Instagram'da obuna bo'ling",    desc:"@0zodbek.saidov sahifasiga obuna bo'ling",      type:'instagram',   goal:1,       reward:100000},
-  {id:'t_tap100',      cat:'tap',       catL:'👆 Tap Topshiriqlari',   e:'👆', title:"100 marta tapping",             desc:"Jami 100 marta tanga bosing",                   type:'tap_total',   goal:100,     reward:5000},
-  {id:'t_tap1000',     cat:'tap',       catL:'👆 Tap Topshiriqlari',   e:'🔥', title:"1,000 marta tapping",           desc:"Jami 1,000 marta tanga bosing",                 type:'tap_total',   goal:1000,    reward:25000},
-  {id:'t_tap10000',    cat:'tap',       catL:'👆 Tap Topshiriqlari',   e:'💪', title:"10,000 marta tapping",          desc:"Jami 10,000 marta tanga bosing",                type:'tap_total',   goal:10000,   reward:100000},
-  {id:'t_spin1',       cat:'spin',      catL:'🎡 Spin Topshiriqlari',  e:'🎡', title:"1 marta baraban aylantiring",   desc:"Omadli Spin bo'limidan foydalaning",            type:'spin',        goal:1,       reward:10000},
-  {id:'t_spin3',       cat:'spin',      catL:'🎡 Spin Topshiriqlari',  e:'⭐', title:"3 marta baraban aylantiring",   desc:"Jami 3 marta baraban aylantiring",              type:'spin',        goal:3,       reward:30000},
-  {id:'t_spin10',      cat:'spin',      catL:'🎡 Spin Topshiriqlari',  e:'🌟', title:"10 marta baraban aylantiring",  desc:"Jami 10 marta baraban aylantiring",             type:'spin',        goal:10,      reward:75000},
-  {id:'t_coin10k',     cat:'milestone', catL:'💰 Yutuqlar',            e:'💰', title:"10,000 tanga yig'ing",          desc:"Jami 10,000 tanga ishlang",                     type:'coin',        goal:10000,   reward:10000},
-  {id:'t_coin100k',    cat:'milestone', catL:'💰 Yutuqlar',            e:'💎', title:"100,000 tanga yig'ing",         desc:"Jami 100,000 tanga ishlang",                    type:'coin',        goal:100000,  reward:50000},
-  {id:'t_coin500k',    cat:'milestone', catL:'💰 Yutuqlar',            e:'🏅', title:"500,000 tanga yig'ing",         desc:"Jami 500,000 tanga ishlang",                    type:'coin',        goal:500000,  reward:200000},
-  {id:'t_coin1m',      cat:'milestone', catL:'💰 Yutuqlar',            e:'👑', title:"1,000,000 tanga yig'ing",       desc:"Jami 1,000,000 tanga ishlang",                  type:'coin',        goal:1000000, reward:500000},
-  {id:'t_reach_silver',cat:'league',    catL:'🏆 Liga Topshiriqlari',  e:'🥈', title:"Silver ligaga yeting",          desc:"Silver ligaga ko'taring (50,000 tanga)",        type:'league', goal:1, lT:'Silver',  reward:25000},
-  {id:'t_reach_gold',  cat:'league',    catL:'🏆 Liga Topshiriqlari',  e:'🥇', title:"Gold ligaga yeting",            desc:"Gold ligaga ko'taring (250,000 tanga)",         type:'league', goal:1, lT:'Gold',    reward:100000},
-  {id:'t_reach_plat',  cat:'league',    catL:'🏆 Liga Topshiriqlari',  e:'💠', title:"Platinum ligaga yeting",        desc:"Platinum ligaga ko'taring (1,000,000 tanga)",   type:'league', goal:1, lT:'Platinum',reward:500000},
-  {id:'t_streak3',     cat:'daily',     catL:'📅 Kunlik Topshiriqlar', e:'🗓️',title:"3 kun ketma-ket bonus oling",   desc:"Kunlik bonusni 3 kun to'xtovsiz oling",         type:'streak',      goal:3,       reward:30000},
-  {id:'t_streak7',     cat:'daily',     catL:'📅 Kunlik Topshiriqlar', e:'📆', title:"7 kun ketma-ket bonus oling",   desc:"Kunlik bonusni 7 kun to'xtovsiz oling",         type:'streak',      goal:7,       reward:100000},
-  {id:'t_refill1',     cat:'boost',     catL:'⚡ Boost Topshiriqlari', e:'⚡', title:"Full Tank ishlatib ko'ring",    desc:"Energiyani bepul to'ldirish tugmasini bosing",  type:'refill',      goal:1,       reward:10000},
-  {id:'t_boost_tap1',  cat:'boost',     catL:'⚡ Boost Topshiriqlari', e:'🚀', title:"Multi-Tap upgradeni sotib oling",desc:"Multi-Tap darajasini oshiring",               type:'tap_upgrade', goal:1,       reward:20000}
-];
-
-// ================================================
-// SAVE
-// ================================================
-function save() {
-  localStorage.setItem("ozs_f_coins",       coins);
-  localStorage.setItem("ozs_f_totalCoins",  totalCoins);
-  localStorage.setItem("ozs_f_energy",      energy);
-  localStorage.setItem("ozs_f_tapLvl",      tapLvl);
-  localStorage.setItem("ozs_f_limitLvl",    limitLvl);
-  localStorage.setItem("ozs_f_refills",     refillCount);
-  localStorage.setItem("ozs_f_refillDate",  lastRefillDate);
-  localStorage.setItem("ozs_f_spinDate",    lastSpinDate);
-  localStorage.setItem("ozs_f_spinTotal",   spinTotalCount);
-  localStorage.setItem("ozs_f_tapTotal",    tapTotalCount);
-  localStorage.setItem("ozs_f_tasks",       JSON.stringify(completedTasks));
-  localStorage.setItem("ozs_f_bonusDate",   lastBonusDate);
-  localStorage.setItem("ozs_f_streak",      bonusStreak);
-  localStorage.setItem("ozs_f_lastTime",    Date.now());
-  localStorage.setItem("ozs_f_igFollowed",  igFollowed);
-  localStorage.setItem("ozs_f_refillUsed",  refillUsedTotal);
-  localStorage.setItem("ozs_f_tapUpgrades", tapUpgradeCount);
-  if (_prevLeagueName) localStorage.setItem("ozs_f_prevLeague", _prevLeagueName);
-}
-
-function calculateOfflineEnergy() {
-  const diff = Math.floor((Date.now() - lastSaveTime) / 1000);
-  if (diff > 0) energy = Math.min(energy + diff * 2, limits[limitLvl]);
-  lastSaveTime = Date.now();
-  save();
-}
-
-function getCurrentLeague() {
-  let cur = leagues[0];
-  for (let i = 0; i < leagues.length; i++) {
-    if (totalCoins >= leagues[i].min) cur = leagues[i];
-  }
-  return cur;
-}
-
-// ================================================
-// FIX 3 — ASOSIY TUZATMA: Liga rangini to'g'ri qo'llash
-//
-// Muammo: CSS body { background-image: radial-gradient(... var(--theme-color) ...) }
-//   CSS o'zgaruvchisi JS orqali o'zgarganda Telegram WebView (va ba'zi Chrome versiyalari)
-//   background-image ni qayta hisob-kitob QILMAYDI — shuning uchun rang o'zgarmaydi.
-//
-// Yechim: body.style.backgroundImage ni to'g'ridan-to'g'ri yangilash.
-// ================================================
-function applyTheme(color) {
-  document.documentElement.style.setProperty('--theme-color', color);
-  document.body.style.backgroundImage =
-    `radial-gradient(circle at 50% 0%, ${color} 0%, transparent 70%)`;
-}
-
-// Liga o'zgarganda popup ko'rsatish
-function checkLeagueChange(league) {
-  if (_prevLeagueName === null) {
-    // Birinchi ochilish — popup chiqarmaslik
-    _prevLeagueName = league.name;
-    save(); return;
-  }
-  if (league.name === _prevLeagueName) return;
-
-  // Yangi ligaga o'tildi!
-  _prevLeagueName = league.name;
-  const popup = document.getElementById("leagueUpPopup");
-  document.getElementById("lgEmoji").innerText = league.emoji;
-  document.getElementById("lgName").innerText  = league.name;
-  document.getElementById("lgName").style.color = league.color;
-  popup.style.border    = `2px solid ${league.color}`;
-  popup.style.boxShadow = `0 0 70px ${league.color}66, 0 20px 60px rgba(0,0,0,0.85)`;
-  popup.classList.add("show");
-  if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  if (_leaguePopupTimer) clearTimeout(_leaguePopupTimer);
-  _leaguePopupTimer = setTimeout(()=> popup.classList.remove("show"), 3200);
-  save();
-}
-
-// ================================================
-// UPDATE UI
-// ================================================
-function updateUI() {
-  const league = getCurrentLeague();
-
-  // ✅ Rangni har doim to'g'ri qo'llash (body background ham)
-  applyTheme(league.color);
-
-  document.getElementById("leagueBadge").innerText = league.name;
-  document.getElementById("leagueName").innerText  = league.name + " LEAGUE";
-  document.getElementById("balance").innerText     = Math.floor(coins).toLocaleString();
-  document.getElementById("energyVal").innerText   = Math.floor(energy) + " / " + limits[limitLvl];
-  document.getElementById("energyFill").style.width = (energy / limits[limitLvl] * 100) + "%";
-  document.getElementById("usdValWallet").innerText = "$" + ((coins/1000000)*0.25).toFixed(4);
-
-  checkLeagueChange(league);
-
-  const today = new Date().toLocaleDateString();
-
-  const spinBtn = document.getElementById("spinBtn");
-  if (lastSpinDate === today) {
-    spinBtn.disabled=true; spinBtn.innerText="ERTAGA QAYTING"; spinBtn.style.background="#333";
-  } else {
-    spinBtn.disabled=false; spinBtn.innerText="AYLANTIRISH (1 KUNDA 1 MARTA)"; spinBtn.style.background=league.color;
-  }
-
-  document.getElementById("streakTxt").innerText = "Kun: " + bonusStreak;
-  const claimBtn = document.getElementById("claimBonusBtn");
-  if (lastBonusDate === today) {
-    claimBtn.disabled=true; claimBtn.innerText="ERTANGA QAYTING"; claimBtn.style.background="#333"; claimBtn.style.color="#555";
-  } else {
-    claimBtn.disabled=false; claimBtn.innerText="BONUSNI OLISH (+10,000)"; claimBtn.style.background=league.color; claimBtn.style.color="#000";
-  }
-
-  if (lastRefillDate !== today) { refillCount=3; lastRefillDate=today; }
-  document.getElementById("refillLabel").innerText = "Qoldi: " + refillCount + "/3";
-  const refillBtn = document.getElementById("refillBtn");
-  if (refillCount <= 0) {
-    refillBtn.disabled=true; refillBtn.innerText="TUGADI"; refillBtn.style.background="#333";
-  } else {
-    refillBtn.disabled=false; refillBtn.innerText="TO'LDIRISH"; refillBtn.style.background="var(--accent-gold)";
-  }
-
-  renderBoosts(); renderTasks(); renderLeagues(league.name);
-}
-
-// ================================================
-// TASK PROGRESS
-// ================================================
-function getTaskProgress(t) {
-  if (t.type==='instagram')   return igFollowed ? 1 : 0;
-  if (t.type==='tap_total')   return tapTotalCount;
-  if (t.type==='spin')        return spinTotalCount;
-  if (t.type==='coin')        return totalCoins;
-  if (t.type==='streak')      return bonusStreak;
-  if (t.type==='refill')      return refillUsedTotal;
-  if (t.type==='tap_upgrade') return tapUpgradeCount;
-  if (t.type==='league') {
-    const ti = leagues.findIndex(l=>l.name===t.lT);
-    const ci = leagues.findIndex(l=>l.name===getCurrentLeague().name);
-    return ci>=ti ? 1 : 0;
-  }
-  return 0;
-}
-
-function getCatClass(cat) {
-  return ({social:'cat-social',tap:'cat-tap',spin:'cat-tap',milestone:'cat-milestone',league:'cat-league',daily:'cat-daily',boost:'cat-tap'})[cat]||'cat-tap';
-}
-
-// ================================================
-// RENDER
-// ================================================
-function renderBoosts() {
-  const nt=tapLvl+1, nl=limitLvl+1;
-  const tm=nt>=tapPowers.length, lm=nl>=limits.length;
-  document.getElementById("boostList").innerHTML=`
-    <div class="item-card">
-      <div><p style="font-weight:900;font-size:15px;">Multi-Tap Lvl ${tapLvl+1}</p>
-      <p style="font-size:12px;color:var(--accent-gold);margin-top:5px;">Power: +${tm?'MAX':tapPowers[nt]}</p></div>
-      <button class="btn-buy" onclick="buy('tap')" ${tm||coins<costs[nt]?'disabled':''}>${tm?'MAX':costs[nt].toLocaleString()}</button>
-    </div>
-    <div class="item-card">
-      <div><p style="font-weight:900;font-size:15px;">Energy Limit Lvl ${limitLvl+1}</p>
-      <p style="font-size:12px;color:var(--theme-color);margin-top:5px;">Limit: ${lm?'MAX':limits[nl].toLocaleString()}</p></div>
-      <button class="btn-buy" onclick="buy('lim')" ${lm||coins<costs[nl]?'disabled':''}>${lm?'MAX':costs[nl].toLocaleString()}</button>
-    </div>`;
-}
-
-function renderTasks() {
-  const cats=[]; const seen={};
-  tasks.forEach(t=>{ if(!seen[t.cat]){seen[t.cat]=true; cats.push({k:t.cat,l:t.catL});} });
-  let h="";
-  cats.forEach(cat=>{
-    h+=`<span class="task-category ${getCatClass(cat.k)}">${cat.l}</span>`;
-    tasks.filter(t=>t.cat===cat.k).forEach(t=>{
-      const done=completedTasks.includes(t.id);
-      const prog=getTaskProgress(t);
-      const can=!done&&prog>=t.goal;
-      const pct=done?100:Math.min(100,Math.floor(prog/t.goal*100));
-      const isIg=t.type==='instagram';
-      let bt=done?'✅ BAJARILDI':(can?'OLISH':'KUTISH');
-      let bs=done?'background:var(--accent-green);color:#000;':'';
-      if(isIg&&!done&&!igFollowed){bt='📸 OBUNA';bs='background:linear-gradient(45deg,#f09433,#dc2743);color:white;';}
-      const pt=done?'':(isIg?(igFollowed?'Tekshirilmoqda...':"Obuna bo'ling"):`${prog.toLocaleString()} / ${t.goal.toLocaleString()}`);
-      h+=`<div class="item-card" style="${done?'opacity:0.6;':''}">
-        <div style="flex:1;margin-right:10px;">
-          <p style="font-weight:900;font-size:14px;">${t.e} ${t.title}</p>
-          <p style="font-size:11px;color:#888;margin-top:3px;">${t.desc}</p>
-          <p style="font-size:12px;color:var(--accent-gold);margin-top:4px;font-weight:900;">+${t.reward.toLocaleString()} 🪙</p>
-          ${!done&&!isIg?`<div class="task-progress-bar"><div class="task-progress-fill" style="width:${pct}%;"></div></div><p style="font-size:10px;color:#666;margin-top:4px;">${pt}</p>`:''}
+    <div class="container">
+        <div class="icon-box">🛠️</div>
+        
+        <div class="status-badge">Texnik xizmat ko'rsatish</div>
+        
+        <h1>Vaqtincha to'xtatildi</h1>
+        
+        <div class="info-card">
+            <p>Ilova texnik sabablarga ko'ra vaqtincha faol emas. Biz tizimni yangilayapmiz va imkoniyatlarni kengaytiryapmiz.</p>
+            <p style="font-size: 13px; margin-bottom: 0;">Keltirilgan noqulayliklar uchun uzr so'raymiz. Tez orada qaytamiz!</p>
         </div>
-        <button class="btn-buy" onclick="${isIg&&!igFollowed?'openIgModal()':(`claimTask('${t.id}')`)}"
-          ${(!can&&!(isIg&&!igFollowed))?'disabled':''} style="${bs}min-width:80px;text-align:center;">${bt}</button>
-      </div>`;
-    });
-  });
-  document.getElementById("taskList").innerHTML=h;
-}
 
-function renderLeagues(cur) {
-  let h="";
-  leagues.forEach(l=>{
-    const ic=l.name===cur;
-    h+=`<div class="item-card" style="border-left:4px solid ${l.color};${ic?'background:rgba(255,255,255,0.08);':''}">
-      <div>
-        <p style="font-weight:900;font-size:15px;color:${l.color}">${totalCoins>=l.min?'✅':'🔒'} ${l.name}</p>
-        <p style="font-size:12px;color:#888;margin-top:5px;">Min: ${l.min.toLocaleString()} tanga</p>
-      </div>
-      ${ic?`<span style="font-size:11px;font-weight:900;color:${l.color};text-align:right;">📍 Siz<br>shu yerdasiz</span>`:''}
-    </div>`;
-  });
-  document.getElementById("leagueList").innerHTML=h;
-}
+        <a href="https://t.me/OzsStudio" class="btn-channel">Yangiliklarni kuzatish</a>
+    </div>
 
-// ================================================
-// INSTAGRAM
-// ================================================
-function openIgModal() {
-  igVerifyReady=false;
-  document.getElementById("igProgressBar").style.display="none";
-  document.getElementById("igProgressFill").style.width="0%";
-  document.getElementById("igStatusText").innerText="";
-  const ob=document.getElementById("igOpenBtn");
-  ob.disabled=false; ob.style.opacity="1";
-  const vb=document.getElementById("igVerifyBtn");
-  vb.disabled=true; vb.style.background="#1a1a2e"; vb.style.color="#555"; vb.style.border="2px solid #222";
-  document.getElementById("igVerifyModal").classList.add("show");
-}
-function closeIgModal() { document.getElementById("igVerifyModal").classList.remove("show"); }
-function igStep1() {
-  window.open("https://instagram.com/0zodbek.saidov","_blank");
-  const ob=document.getElementById("igOpenBtn");
-  ob.disabled=true; ob.style.opacity="0.5";
-  document.getElementById("igStatusText").innerText="⏳ Instagram ochildi... 10 soniya kutib turing";
-  document.getElementById("igProgressBar").style.display="block";
-  setTimeout(()=>{ document.getElementById("igProgressFill").style.width="100%"; },100);
-  setTimeout(()=>{
-    igVerifyReady=true;
-    document.getElementById("igStatusText").innerText="✅ Endi 'OBUNA BO'LDIM' tugmasini bosing!";
-    const vb=document.getElementById("igVerifyBtn");
-    vb.disabled=false; vb.style.background="linear-gradient(45deg,#f09433,#dc2743)";
-    vb.style.color="white"; vb.style.border="none"; vb.style.cursor="pointer";
-  },10000);
-}
-function igStep2() {
-  if(!igVerifyReady) return;
-  igFollowed=true; save(); closeIgModal();
-  const task=tasks.find(t=>t.id==='t_ig_follow');
-  if(task&&!completedTasks.includes(task.id)){
-    coins+=task.reward; totalCoins+=task.reward;
-    completedTasks.push(task.id); save();
-    showNotif("📸 +100,000 tanga! Rahmat!");
-    if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    updateUI();
-  }
-}
+    <div class="footer-text">OZS STUDIO PRO</div>
 
-// ================================================
-// NOTIFICATION
-// ================================================
-let _nt=null;
-function showNotif(text) {
-  const n=document.getElementById("notifPop");
-  n.innerText=text; n.classList.add("show");
-  if(_nt) clearTimeout(_nt);
-  _nt=setTimeout(()=>n.classList.remove("show"),2800);
-}
-
-// ================================================
-// TAP
-// ================================================
-document.getElementById("tapSurface").addEventListener("pointerdown",(e)=>{
-  e.preventDefault();
-  const power=tapPowers[tapLvl];
-  if(energy<power){ if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning'); return; }
-  energy-=power; coins+=power; totalCoins+=power; tapTotalCount++;
-  const n=document.createElement("div");
-  n.className="tap-num"; n.innerText="+"+power;
-  n.style.left=(e.clientX-20)+"px"; n.style.top=(e.clientY-50)+"px";
-  n.style.color=getComputedStyle(document.documentElement).getPropertyValue('--theme-color');
-  document.body.appendChild(n);
-  setTimeout(()=>n.remove(),600);
-  const coin=document.getElementById("coinBtn");
-  coin.style.transform="scale(0.92)";
-  setTimeout(()=>{ coin.style.transform="scale(1)"; },50);
-  if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-  updateUI();
-  if(tapTotalCount%5===0) save(); // har 5 tapda saqlash
-});
-
-// ================================================
-// ACTIONS
-// ================================================
-function buy(type) {
-  const lvl=type==='tap'?tapLvl:limitLvl, cost=costs[lvl+1];
-  if(coins>=cost){
-    coins-=cost;
-    if(type==='tap'){tapLvl++;tapUpgradeCount++;}else limitLvl++;
-    showNotif(type==='tap'?"🚀 Multi-Tap yaxshilandi!":"⚡ Energiya limiti oshdi!");
-    updateUI();save();
-  } else tg.showAlert("Mablag' yetarli emas! Kerakli tanga: "+cost.toLocaleString());
-}
-function useRefill() {
-  if(refillCount>0){ energy=limits[limitLvl]; refillCount--; refillUsedTotal++; showNotif("⚡ Energiya to'liq to'ldirildi!"); updateUI();save(); }
-}
-function claimDailyBonus() {
-  const today=new Date().toLocaleDateString();
-  if(lastBonusDate===today) return;
-  bonusStreak++;coins+=10000;totalCoins+=10000;lastBonusDate=today;
-  showNotif("🎁 +10,000 tanga! "+bonusStreak+"-kun streak!");
-  updateUI();save();
-}
-let isSpinning=false;
-function doSpin() {
-  const today=new Date().toLocaleDateString();
-  if(lastSpinDate===today||isSpinning) return;
-  isSpinning=true;updateUI();
-  document.getElementById("wheel").style.transform=`rotate(${1800+Math.random()*3600}deg)`;
-  setTimeout(()=>{
-    isSpinning=false;lastSpinDate=today;spinTotalCount++;
-    const prizes=[50000,5000,15000,0,100000,2000];
-    const win=prizes[Math.floor(Math.random()*6)];
-    coins+=win;totalCoins+=win;
-    if(win>0) showNotif("🎡 +"+win.toLocaleString()+" tanga!");
-    else tg.showAlert("Bugun omad kelmadi. Ertaga qayting! 🎡");
-    updateUI();save();
-  },4100);
-}
-function claimTask(id) {
-  const task=tasks.find(t=>t.id===id);
-  if(!task||completedTasks.includes(id)) return;
-  if(getTaskProgress(task)<task.goal) return;
-  coins+=task.reward;totalCoins+=task.reward;completedTasks.push(id);
-  showNotif(task.e+" +"+task.reward.toLocaleString()+" tanga!");
-  if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  updateUI();save();
-}
-
-// ================================================
-// LOOPS & MODALS
-// ================================================
-setInterval(()=>{ if(energy<limits[limitLvl]){energy=Math.min(energy+2,limits[limitLvl]);updateUI();} },1000);
-setInterval(save,5000);
-function openM(id){ closeAll();document.getElementById(id).classList.add("open");document.getElementById("overlay").style.display="block"; }
-function closeAll(){ document.querySelectorAll(".modal").forEach(m=>m.classList.remove("open"));document.getElementById("overlay").style.display="none"; }
-
-// ================================================
-// START
-// ================================================
-window.onload=()=>{
-  calculateOfflineEnergy();
-  // Sahifa ochilganda darhol to'g'ri rangni qo'llash
-  const startLeague=getCurrentLeague();
-  applyTheme(startLeague.color);
-  if(_prevLeagueName===null) _prevLeagueName=startLeague.name; // birinchi ochilishda popup yo'q
-  updateUI();
-};
-window.addEventListener('blur',save);
-window.addEventListener('beforeunload',save);
-</script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        
+        // Agar kerak bo'lsa, haptic feedback berish
+        window.onload = () => {
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('warning');
+            }
+        };
+    </script>
 </body>
 </html>
